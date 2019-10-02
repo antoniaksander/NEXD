@@ -1,58 +1,80 @@
-var three = THREE;
 
+var three = THREE;
 var scene = new three.Scene();
 var camera = new three.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 800);
 var renderer = new three.WebGLRenderer();
+const loader = new THREE.TextureLoader();
+
 renderer.setSize(window.innerWidth, window.innerHeight);
 
 document.body.appendChild(renderer.domElement);
 
 
 
-var geometry = new three.BoxGeometry(1, 1, 0, 0, 0);
-
-var textCtx = document.createElement("canvas").getContext("2d");
-
-// Puts text in center of canvas.
-function makeTextCanvas(text, width, height) {
-    textCtx.canvas.width = width;
-    textCtx.canvas.height = height;
-    textCtx.font = "20px monospace";
-    textCtx.textAlign = "center";
-    textCtx.textBaseline = "middle";
-    textCtx.fillStyle = "";
-    textCtx.clearRect(0, 0, textCtx.canvas.width, textCtx.canvas.height);
-    textCtx.fillText(text, width / 2, height / 2);
-    return textCtx.canvas;
-}
-
-// add text
+var geometry = new three.BoxGeometry(1, 1, 1);
 
 var material = new three.MeshFaceMaterial([
     new three.MeshBasicMaterial({
-        map: THREE.ImageUtils.loadTexture("nexd.png"),
+        map: THREE.TextureLoader(""),
     }),
     new three.MeshBasicMaterial({
-        map: THREE.ImageUtils.loadTexture("nexd.png")
+        map: THREE.TextureLoader(""),
     }),
     new three.MeshBasicMaterial({
-        map: THREE.ImageUtils.loadTexture("nexd.png")
+        map: loader.load('nexd.png'),
     }),
     new three.MeshBasicMaterial({
-        map: THREE.ImageUtils.loadTexture("nexd.png")
+        map: loader.load('nexd.png'),
     }),
     new three.MeshBasicMaterial({
-        map: THREE.ImageUtils.loadTexture("nexd.png")
+        map: loader.load('nexd.png'),
     }),
     new three.MeshBasicMaterial({
-        map: THREE.ImageUtils.loadTexture("nexd.png")
+        map: loader.load('nexd.png'),
     })
 ]);
 
 var cube = new three.Mesh(geometry, material);
 cube.rotation.x = 0;
-cube.rotation.y = Math.PI / 4;
+cube.rotation.y = Math.PI / 1;
 scene.add(cube);
+
+
+var geometry1 = new three.BoxGeometry(1.2, 1.2, 1.2);
+
+var material1 = new three.MeshFaceMaterial([
+
+    new three.MeshBasicMaterial({
+        transparent: true,
+        map: THREE.TextureLoader(""),
+    }),
+    new three.MeshBasicMaterial({
+        map: THREE.TextureLoader(""),
+    }),
+    new three.MeshBasicMaterial({
+        transparent: true,
+        map: loader.load('bluewhite.svg'),
+    }),
+    new three.MeshBasicMaterial({
+        transparent: true,
+        map: loader.load('bluewhite.svg'),
+    }),
+    new three.MeshBasicMaterial({
+        transparent: true,
+        map: loader.load('bluewhite.svg'),
+    }),
+    new three.MeshBasicMaterial({
+        transparent: true,
+        map: loader.load('bluewhite.svg'),
+    })
+]);
+
+
+
+var cube1 = new three.Mesh(geometry1, material1);
+cube1.rotation.x = 0;
+cube1.rotation.y = Math.PI / 1;
+scene.add(cube1);
 
 
 camera.position.z = 5;
@@ -67,7 +89,7 @@ $(renderer.domElement).on('mousedown', function (e) {
     isDragging = true;
 })
     .on('mousemove', function (e) {
-        console.log(e);
+        //console.log(e);
         var deltaMove = {
             x: e.offsetX - previousMousePosition.x,
             y: e.offsetY - previousMousePosition.y
@@ -77,12 +99,13 @@ $(renderer.domElement).on('mousedown', function (e) {
 
             var deltaRotationQuaternion = new three.Quaternion()
                 .setFromEuler(new three.Euler(
-                    toRadians(deltaMove.y * 0),
-                    toRadians(deltaMove.x * 1),
+                    toRadians(deltaMove.y * 1),
+                    toRadians(deltaMove.x * 0),
                     0,
                 ));
 
             cube.quaternion.multiplyQuaternions(deltaRotationQuaternion, cube.quaternion);
+            cube1.quaternion.multiplyQuaternions(deltaRotationQuaternion, cube1.quaternion);
         }
 
         previousMousePosition = {
@@ -108,7 +131,7 @@ function render() {
     renderer.render(scene, camera);
 
 
-    requestAnimFrame(render);
+    requestAnimFrame(render, cube, cube1);
 }
 
 render();
